@@ -26,6 +26,7 @@ public class PingPongClient extends TreeFrame {
     public Socket socket;
     public InputStream inputStream;
     public OutputStream outputStream;
+    public Boolean connected = false;
 
     public PingPongClient(String hostname, int port) {
         this.hostname = hostname;
@@ -35,9 +36,10 @@ public class PingPongClient extends TreeFrame {
             this.socket = new Socket(this.hostname, this.port);
             this.inputStream = socket.getInputStream();
             this.outputStream = socket.getOutputStream();
-        } catch (Exception e) {
+            connected = true;
+        } catch (Exception e) { }
 
-        }
+
 
     }
 
