@@ -37,7 +37,7 @@ public class PingPongClient extends TreeFrame {
         this.port = port;
 
         try {
-            System.out.println("[INFO] Client: " + hostname + ":" + port);
+            System.out.println("[INFO] PingPongClient: " + hostname + ":" + port);
 
             this.socket = new Socket(this.hostname, this.port);
             this.inputStream = socket.getInputStream();
@@ -47,11 +47,13 @@ public class PingPongClient extends TreeFrame {
 
         if(connected) {
             PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream));
+            System.out.println("[INFO] PingPongClient: Sending data!");
 
             while (true) {
                 try {
                     printWriter.write("Hello World!");
                     printWriter.flush();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

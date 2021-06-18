@@ -20,8 +20,6 @@ public class PlayerConnection implements Runnable {
 
     @Override
     public void run() {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-
         while (true) {
             try     {
                 System.out.println("[INFO] PlayerConnectionServerSocket: " + InetAddress.getLocalHost());
@@ -30,6 +28,7 @@ public class PlayerConnection implements Runnable {
                 inputStream = socket.getInputStream();
                 outputStream = socket.getOutputStream();
 
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
                 System.out.println(reader.readLine());
             } catch (Exception e) {
                 e.printStackTrace();
