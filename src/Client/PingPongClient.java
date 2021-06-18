@@ -14,17 +14,11 @@ public class PingPongClient extends TreeFrame {
         new PingPongClient("26.103.63.212",11111);
     }
 
-
-    int GUI = 0;
-    /**GUI = 0 --> MainMenu
-     * GUI = 1 -->
-     */
-
     public Player playerOne;
     public Player playerTwo;
 
-    public String hostname = "localhost";
-    public int port = 11111;
+    public String hostname;
+    public int port;
 
     public Socket socket;
 
@@ -65,6 +59,7 @@ public class PingPongClient extends TreeFrame {
 
         g.setColor(Color.WHITE);
         g.drawLine(0,0,this.getWidth(),this.getHeight());
+        g.drawRect(playerOne.x,playerTwo.y,20,20);
     }
 
     @Override
@@ -76,6 +71,8 @@ public class PingPongClient extends TreeFrame {
                 Thread.sleep(20);
                 this.paint(graphicsBuffer);
                 graphicsBuffer = this.getGraphics();
+
+
 
                 Object o = objectInputStream.readObject();
                 if(o.getClass().isInstance(new Player())) {

@@ -5,6 +5,10 @@ import ClientAndServer.Player;
 import com.sun.javafx.geom.Vec2d;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Vector;
 
 public class PingPongServer implements Runnable {
@@ -16,25 +20,24 @@ public class PingPongServer implements Runnable {
     Player playerTwo = new Player();
 
     boolean playerOneConnected = false;
-    PlayerConnection playerOneConnection = null;
-    Thread playerOneConnectionThread = null;
+    ServerSocket serverSocketOne = new ServerSocket(portPlayerOne);
+    Socket socketOne;
 
     boolean playerTwoConnected = false;
-    PlayerConnection playerTwoConnection = null;
-    Thread playerTwoConnectionThread = null;
+    ServerSocket serverSocketTwo = new ServerSocket(portPlayerTwo);
+    Socket socketTwo;
 
     public static void main(String[] args) throws IOException {
         new PingPongServer();
     }
 
     public PingPongServer () throws IOException {
-        playerOneConnection = new PlayerConnection(portPlayerOne);
-        playerOneConnectionThread = new Thread(playerOneConnection);
-        playerOneConnectionThread.start();
-
-        playerTwoConnection = new PlayerConnection(portPlayerTwo);
-        playerTwoConnectionThread = new Thread(playerTwoConnection);
-        playerTwoConnectionThread.start();
+        System.out.println("[INFO] Server: Waiting for player one!");
+        socketOne = serverSocketOne.accept();
+        System.out.println("[INFO] Server: Player one connected!");
+        System.out.println("[INFO] Server: Waiting for player one!");
+        socketTwo = serverSocketTwo.accept();
+        System.out.println("[INFO] Server: Player two connected!");
 
         //GAME STARTUP CODE HERE >>
         playerOne.x = 100;
@@ -46,17 +49,22 @@ public class PingPongServer implements Runnable {
 
     @Override
     public void run() {
+        int movement = 1;
         while (true) {
             try {
                 Thread.sleep(1);
 
-                if(playerOneConnection.socket.isConnected() == true && playerOneConnected == false) {
+                if(playerOne.x>300) movement*=-1;
+                if(playerOne.x<100) movement*=-1;
+                playerOne.x += movement;
+
+                if(socketOne.isConnected() == true && playerOneConnected == false) {
                     //Gets called ONCE if playerOne is connected >>
                     playerOneConnected = true;
                     System.out.println("[INFO] PingPongServer: Player one connected!");
                 }
 
-                if(playerTwoConnection.socket.isConnected() == true && playerTwoConnected == false) {
+                if(socketTwo.isConnected() == true && playerTwoConnected == false) {
                     //Gets called ONCE if playerOne is connected >>
                     playerTwoConnected = true;
                     System.out.println("[INFO] PingPongServer: Player two connected!");
@@ -70,12 +78,12 @@ public class PingPongServer implements Runnable {
                 }
 
                 //Sending player Objects to playerOne
-                playerOneConnection.sendPlayer(playerOne);
-                playerOneConnection.sendPlayer(playerTwo);
+                sendPlayer(socketOne,playerOne);
+                sendPlayer(socketOne,playerTwo);
 
                 //Sending player Objects to playerOne
-                playerOneConnection.sendPlayer(playerOne);
-                playerOneConnection.sendPlayer(playerTwo);
+                sendPlayer(socketTwo,playerOne);
+                sendPlayer(socketTwo,playerTwo);
 
             } catch (Exception e) {
                 System.out.println("[ERROR] PingPongServer: ");
@@ -83,4 +91,11 @@ public class PingPongServer implements Runnable {
             }
         }
     }
+
+    public void sendPlayer(Socket socket, Player p) throws IOException {
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        objectOutputStream.writeObject(p);
+        objectOutputStream.close();
+    }
+
 }
