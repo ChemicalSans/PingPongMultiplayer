@@ -1,6 +1,8 @@
 package Server;
 
 import ClientAndServer.Ball;
+import ClientAndServer.Player;
+import com.sun.javafx.geom.Vec2d;
 
 import java.io.IOException;
 import java.util.Vector;
@@ -10,8 +12,10 @@ public class PingPongServer implements Runnable {
     int portPlayerTwo = 11112;
 
     Vector<Ball> balls = new Vector<Ball>();
+    Player playerOne = new Player();
+    Player playerTwo = new Player();
 
-
+    boolean playerOneConnected = false;
     PlayerConnection playerOneConnection = null;
     Thread playerOneConnectionThread = null;
 
@@ -23,6 +27,10 @@ public class PingPongServer implements Runnable {
         playerOneConnection = new PlayerConnection(portPlayerOne);
         playerOneConnectionThread = new Thread(playerOneConnection);
         playerOneConnectionThread.start();
+        //GAME STARTUP CODE HERE >>
+        playerOne.x = 100;
+        playerOne.y = 200;
+
 
     }
 
@@ -33,9 +41,10 @@ public class PingPongServer implements Runnable {
             try {
                 Thread.sleep(1);
 
-                if(playerOneConnection.socket.isConnected()) {
-                    //Gets called if playerOne is conected >>
-                    System.out.println("[INFO] Player one connected!");
+                if(playerOneConnection.socket.isConnected() == true && playerOneConnected == false) {
+                    //Gets called ONCE if playerOne is conected >>
+                    playerOneConnected = true;
+                    System.out.println("[INFO] PingPongServer: Player one connected!");
                 }
 
 
@@ -45,7 +54,12 @@ public class PingPongServer implements Runnable {
                 for(Ball b : balls) {
                     b.move();
                 }
-            } catch (InterruptedException e) {
+
+
+                playerOneConnection.sendPlayer(playerOne);
+                playerOneConnection.sendPlayer(playerTwo);
+
+            } catch (Exception e) {
                 System.out.println("[ERROR] PingPongServer: ");
                 e.printStackTrace();
             }
