@@ -1,13 +1,15 @@
+package Client;
+
 import TreePackage.TreeFrame;
 
 import java.awt.*;
 
-public class PingPong extends TreeFrame {
+public class PingPongClient extends TreeFrame {
     public static void main(String[] args) {
-        new PingPong();
+        new PingPongClient();
     }
 
-    public PingPong () {
+    public PingPongClient() {
 
     }
 
