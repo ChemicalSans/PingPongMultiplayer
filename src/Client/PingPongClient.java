@@ -11,7 +11,7 @@ public class PingPongClient extends TreeFrame {
         new PingPongClient();
     }
 
-    String hostname = "";
+    String hostname = "localhost";
     int port = 11111;
 
     int GUI = 0;
@@ -21,7 +21,7 @@ public class PingPongClient extends TreeFrame {
 
     public Player PlayerOne = new Player();
     public Player PlayerTwo = new Player();
-    public Socket socket = new Socket();
+    public Socket socket = new Socket(hostname,port);
 
     public PingPongClient() {
 
