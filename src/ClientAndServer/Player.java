@@ -7,6 +7,9 @@ import java.awt.*;
 public class Player {
     public Vec2d pos;
     public int id;
+    public static int idCounter;
     public Color color;
+
+
 
 }

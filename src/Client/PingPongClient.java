@@ -1,5 +1,6 @@
 package Client;
 
+import ClientAndServer.Player;
 import TreePackage.TreeFrame;
 
 import java.awt.*;
@@ -9,7 +10,16 @@ public class PingPongClient extends TreeFrame {
         new PingPongClient();
     }
 
+    int GUI = 0;
+    /**GUI = 0 --> MainMenu
+     * GUI = 1 -->
+     */
+
+    public Player PlayerOne = new Player();
+    public Player PlayerTwo = new Player();
+
     public PingPongClient() {
+
 
     }
 
