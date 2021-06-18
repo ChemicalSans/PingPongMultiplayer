@@ -4,11 +4,13 @@ import ClientAndServer.Player;
 import TreePackage.TreeFrame;
 
 import java.awt.*;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 
 public class PingPongClient extends TreeFrame {
     public static void main(String[] args) {
-        new PingPongClient();
+        new PingPongClient("localhost",11111);
     }
 
     String hostname = "localhost";
@@ -22,9 +24,20 @@ public class PingPongClient extends TreeFrame {
     public Player PlayerOne = new Player();
     public Player PlayerTwo = new Player();
     public Socket socket;
+    public InputStream inputStream;
+    public OutputStream outputStream;
 
-    public PingPongClient() {
-        this.socket = new Socket(hostname,port);
+    public PingPongClient(String hostname, int port) {
+        this.hostname = hostname;
+        this.port = port;
+
+        try {
+            this.socket = new Socket(this.hostname, this.port);
+            this.inputStream = socket.getInputStream();
+            this.outputStream = socket.getOutputStream();
+        } catch (Exception e) {
+
+        }
 
     }
 
