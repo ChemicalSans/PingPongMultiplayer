@@ -21,10 +21,10 @@ public class PingPongClient extends TreeFrame {
 
     public Player PlayerOne = new Player();
     public Player PlayerTwo = new Player();
-    public Socket socket = new Socket(hostname,port);
+    public Socket socket;
 
     public PingPongClient() {
-
+        this.socket = new Socket(hostname,port);
 
     }
 
