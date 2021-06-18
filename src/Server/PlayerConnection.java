@@ -14,11 +14,7 @@ public class PlayerConnection implements Runnable {
 
     public PlayerConnection(int port) throws IOException {
         serverSocket = new ServerSocket(port);
-        System.out.println("[INFO] PlayerConnectionServerSocket: " + InetAddress.getLocalHost());
-        socket = serverSocket.accept();
 
-        inputStream = socket.getInputStream();
-        outputStream = socket.getOutputStream();
 
     }
 
@@ -28,6 +24,12 @@ public class PlayerConnection implements Runnable {
 
         while (true) {
             try     {
+                System.out.println("[INFO] PlayerConnectionServerSocket: " + InetAddress.getLocalHost());
+                socket = serverSocket.accept();
+
+                inputStream = socket.getInputStream();
+                outputStream = socket.getOutputStream();
+
                 System.out.println(reader.readLine());
             } catch (Exception e) {
                 e.printStackTrace();

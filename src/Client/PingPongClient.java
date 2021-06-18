@@ -37,6 +37,8 @@ public class PingPongClient extends TreeFrame {
         this.port = port;
 
         try {
+            System.out.println("[INFO] Client: " + hostname + ":" + port);
+
             this.socket = new Socket(this.hostname, this.port);
             this.inputStream = socket.getInputStream();
             this.outputStream = socket.getOutputStream();
