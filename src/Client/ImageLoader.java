@@ -1,8 +1,10 @@
 package Client;
 
+import java.awt.image.BufferedImage;
+
 public class ImageLoader {
 
-
+    BufferedImage image;
 
     public ImageLoader() {
         try {
