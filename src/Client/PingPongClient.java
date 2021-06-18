@@ -10,7 +10,7 @@ import java.net.Socket;
 
 public class PingPongClient extends TreeFrame {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         new PingPongClient("26.103.63.212",11111);
     }
 
@@ -25,6 +25,7 @@ public class PingPongClient extends TreeFrame {
 
     public String hostname = "localhost";
     public int port = 11111;
+
     public Socket socket;
 
     public InputStream inputStream;
@@ -36,65 +37,24 @@ public class PingPongClient extends TreeFrame {
     public ObjectInputStream objectInputStream;
     public ObjectOutputStream objectOutputStream;
 
-    public Boolean connected = false;
 
-
-
-    public PingPongClient(String hostname, int port) {
+    public PingPongClient(String hostname, int port) throws IOException {
         this.hostname = hostname;
         this.port = port;
         this.playerOne = new Player();
         this.playerTwo = new Player();
 
-        try {
-            System.out.println("[INFO] PingPongClient: " + hostname + ":" + port);
+        System.out.println("[INFO] PingPongClient: " + hostname + ":" + port);
 
-            this.socket = new Socket(this.hostname, this.port);
-            this.inputStream = socket.getInputStream();
-            this.outputStream = socket.getOutputStream();
+        this.socket = new Socket(hostname, port);
+        this.inputStream = socket.getInputStream();
+        this.outputStream = socket.getOutputStream();
 
-            this.dataInputStream = new DataInputStream(inputStream);
-            this.dataOutputStream = new DataOutputStream(outputStream);
+        this.dataInputStream = new DataInputStream(inputStream);
+        this.dataOutputStream = new DataOutputStream(outputStream);
 
-            this.objectOutputStream = new ObjectOutputStream(outputStream);
-            this.objectInputStream = new ObjectInputStream(inputStream);
-
-            connected = true;
-        } catch (Exception e) { }
-
-        if(connected) {
-            System.out.println("[INFO] PingPongClient: Receiving data!");
-
-            while (true) {
-                try {
-                    Object o = objectInputStream.readObject();
-                    if(o.getClass().isInstance(new Player())) {
-                        Player p = (Player) o;
-
-                        if(p.id == 0) {
-                            playerOne = p;
-                            System.out.println("[INFO] PingPongClient: PlayerOne overwritten " + playerOne.x + "x" + playerOne.y);
-                        }
-
-                        switch (p.id) {
-                            case 0:
-                                playerOne = p;
-                                break;
-                            case 1:
-                                playerTwo = p;
-                            default:
-                                System.out.println("[ERROR] PingPongClient: Received player had invalid Id!");
-                            break;
-                        }
-
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
+        this.objectOutputStream = new ObjectOutputStream(outputStream);
+        this.objectInputStream = new ObjectInputStream(inputStream);
     }
 
 
@@ -108,7 +68,38 @@ public class PingPongClient extends TreeFrame {
     }
 
     @Override
-    public void preInit() {
-        this.setUndecorated(true);
+    public void run() {
+        graphicsBuffer = this.getGraphics();
+
+        while (true) {
+            try {
+                Thread.sleep(20);
+                this.paint(graphicsBuffer);
+                graphicsBuffer = this.getGraphics();
+
+                Object o = objectInputStream.readObject();
+                if(o.getClass().isInstance(new Player())) {
+                    Player p = (Player) o;
+                    System.out.println("[INFO] PingPongClient: Received Player!");
+
+                    switch (p.getId()) {
+                        case 0:
+                            playerOne = p;
+                            break;
+                        case 1:
+                            playerTwo = p;
+                            break;
+                        default:
+                            System.out.println("[ERROR] PingPongClient: Received player had invalid Id! --> " + p.id);
+                            break;
+                    }
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }

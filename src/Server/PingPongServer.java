@@ -19,6 +19,10 @@ public class PingPongServer implements Runnable {
     PlayerConnection playerOneConnection = null;
     Thread playerOneConnectionThread = null;
 
+    boolean playerTwoConnected = false;
+    PlayerConnection playerTwoConnection = null;
+    Thread playerTwoConnectionThread = null;
+
     public static void main(String[] args) throws IOException {
         new PingPongServer();
     }
@@ -27,6 +31,11 @@ public class PingPongServer implements Runnable {
         playerOneConnection = new PlayerConnection(portPlayerOne);
         playerOneConnectionThread = new Thread(playerOneConnection);
         playerOneConnectionThread.start();
+
+        playerTwoConnection = new PlayerConnection(portPlayerTwo);
+        playerTwoConnectionThread = new Thread(playerTwoConnection);
+        playerTwoConnectionThread.start();
+
         //GAME STARTUP CODE HERE >>
         playerOne.x = 100;
         playerOne.y = 200;
@@ -42,11 +51,16 @@ public class PingPongServer implements Runnable {
                 Thread.sleep(1);
 
                 if(playerOneConnection.socket.isConnected() == true && playerOneConnected == false) {
-                    //Gets called ONCE if playerOne is conected >>
+                    //Gets called ONCE if playerOne is connected >>
                     playerOneConnected = true;
                     System.out.println("[INFO] PingPongServer: Player one connected!");
                 }
 
+                if(playerTwoConnection.socket.isConnected() == true && playerTwoConnected == false) {
+                    //Gets called ONCE if playerOne is connected >>
+                    playerTwoConnected = true;
+                    System.out.println("[INFO] PingPongServer: Player two connected!");
+                }
 
 
 
@@ -55,7 +69,11 @@ public class PingPongServer implements Runnable {
                     b.move();
                 }
 
+                //Sending player Objects to playerOne
+                playerOneConnection.sendPlayer(playerOne);
+                playerOneConnection.sendPlayer(playerTwo);
 
+                //Sending player Objects to playerOne
                 playerOneConnection.sendPlayer(playerOne);
                 playerOneConnection.sendPlayer(playerTwo);
 

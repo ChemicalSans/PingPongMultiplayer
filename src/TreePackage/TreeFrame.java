@@ -7,10 +7,10 @@ import java.io.File;
 import java.io.IOException;
 
 public class TreeFrame extends Frame implements Runnable , WindowListener , ComponentListener , KeyListener , MouseListener , MouseMotionListener , MouseWheelListener {
-    Thread thread = new Thread(this);
-    Graphics graphicsBuffer = this.getGraphics();
+    public Thread thread = new Thread(this);
+    public Graphics graphicsBuffer = this.getGraphics();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         TreeFrame treeFrame = new TreeFrame();
     }
 

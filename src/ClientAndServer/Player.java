@@ -19,6 +19,7 @@ public class Player implements Serializable {
         this.color = Color.WHITE;
     }
 
-
-
+    public int getId() {
+        return id;
+    }
 }
