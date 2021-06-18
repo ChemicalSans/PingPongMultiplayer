@@ -66,10 +66,8 @@ public class PlayerConnection implements Runnable {
 
     public void sendPlayer(Player p) throws IOException {
         try {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
             objectOutputStream.writeObject(p);
             objectOutputStream.flush();
-            objectOutputStream.close();
         } catch (NullPointerException e) {
 
         }
