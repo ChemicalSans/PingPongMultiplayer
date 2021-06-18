@@ -6,27 +6,31 @@ import TreePackage.TreeFrame;
 import java.awt.*;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class PingPongClient extends TreeFrame {
     public static void main(String[] args) {
-        new PingPongClient("localhost",11111);
+        new PingPongClient("26.103.63.212",11111);
     }
 
-    String hostname = "localhost";
-    int port = 11111;
 
     int GUI = 0;
     /**GUI = 0 --> MainMenu
      * GUI = 1 -->
      */
 
+    public String hostname = "localhost";
+    public int port = 11111;
     public Player PlayerOne = new Player();
     public Player PlayerTwo = new Player();
     public Socket socket;
     public InputStream inputStream;
     public OutputStream outputStream;
     public Boolean connected = false;
+
+
 
     public PingPongClient(String hostname, int port) {
         this.hostname = hostname;
@@ -39,7 +43,18 @@ public class PingPongClient extends TreeFrame {
             connected = true;
         } catch (Exception e) { }
 
+        if(connected) {
+            PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream));
 
+            while (true) {
+                try {
+                    printWriter.write("Hello World!");
+                    printWriter.flush();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
     }
 
