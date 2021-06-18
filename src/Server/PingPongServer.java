@@ -1,16 +1,15 @@
 package Server;
 
+import ClientAndServer.Ball;
+
 import java.io.IOException;
 import java.util.Vector;
 
 public class PingPongServer implements Runnable {
     int portPlayerOne = 11111;
     int portPlayerTwo = 11112;
-    int vx=3;//Geschwindigkeit X
-    int vy=3;//Geschwindigkeit Y
-    int bx;//Ball position X
-    int by;//Ball position Y
-    boolean col;//collision
+
+    Vector<Ball> balls = new Vector<Ball>();
 
 
     PlayerConnection playerOneConnection = null;
@@ -31,19 +30,24 @@ public class PingPongServer implements Runnable {
     @Override
     public void run() {
         while (true) {
-            if(playerOneConnection.socket.isConnected()) {
-                System.out.println("[INFO] Player one connected!");
-            }
+            try {
+                Thread.sleep(1);
 
-            //MOVE
+                if(playerOneConnection.socket.isConnected()) {
+                    //Gets called if playerOne is conected >>
+                    System.out.println("[INFO] Player one connected!");
+                }
 
 
 
 
-
-            //überprüft ob der ball mit einemobjekt kolidiert ist was vorher überprüft wurde
-            if(col == true){
-                vx*=-1;vy*=-1;
+                //Loopt über alle bälle und fürt bei jedem Ball move(); aus
+                for(Ball b : balls) {
+                    b.move();
+                }
+            } catch (InterruptedException e) {
+                System.out.println("[ERROR] PingPongServer: ");
+                e.printStackTrace();
             }
         }
     }
