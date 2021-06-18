@@ -96,7 +96,13 @@ public class PingPongClient extends TreeFrame {
 
                 }
 
-            } catch (Exception e) {
+            } catch (StreamCorruptedException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
