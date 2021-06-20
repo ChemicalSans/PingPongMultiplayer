@@ -53,6 +53,7 @@ public class PingPongClient extends TreeFrame {
                     //System.out.println(objectInputStream.read());
                     System.out.println(dataInputStream.readUTF());
 
+                    /*
                     Object o = objectInputStream.read();
                     if(o.getClass().isInstance(new Player(0))) {
                         Player p = (Player) o;
@@ -68,6 +69,8 @@ public class PingPongClient extends TreeFrame {
                                 break;
                         }
                     }
+
+                     */
 
 
                 } catch (IOException e) {

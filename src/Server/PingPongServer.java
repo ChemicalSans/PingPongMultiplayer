@@ -26,7 +26,7 @@ public class PingPongServer implements Runnable {
     }
 
     public PingPongServer () throws IOException {
-        System.out.println("[INFO] Server IP address: " + InetAddress.getLocalHost());
+        System.out.println("[INFO] Server IP address: " + InetAddress.getLocalHost().getHostAddress() + ":" + port);
         System.out.println("[INFO] Server: Waiting for player one!");
         new Thread(new Client(serverSocket.accept(),this)).start();
         System.out.println("[INFO] Server: Player one connected!");
