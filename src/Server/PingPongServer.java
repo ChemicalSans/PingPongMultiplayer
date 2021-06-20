@@ -16,13 +16,10 @@ public class PingPongServer implements Runnable {
     int port = 11111;
 
     Vector<Ball> balls = new Vector<Ball>();
-    Player playerOne = new Player();
-    Player playerTwo = new Player();
+    Player playerOne = new Player(0);
+    Player playerTwo = new Player(1);
 
     ServerSocket serverSocket = new ServerSocket(port);
-    Socket socket;
-
-
 
     public static void main(String[] args) throws IOException {
         new PingPongServer();

@@ -17,8 +17,8 @@ public class PingPongClient extends TreeFrame {
         new PingPongClient();
     }
 
-    public Player playerOne = new Player();
-    public Player playerTwo = new Player();
+    public Player playerOne = new Player(0);
+    public Player playerTwo = new Player(1);
 
     public String hostname = "192.168.8.106";
     public int port = 11111;
@@ -52,6 +52,22 @@ public class PingPongClient extends TreeFrame {
 
                     //System.out.println(objectInputStream.read());
                     System.out.println(dataInputStream.readUTF());
+
+                    Object o = objectInputStream.read();
+                    if(o.getClass().isInstance(new Player(0))) {
+                        Player p = (Player) o;
+                        switch (p.id) {
+                            case 0:
+                                playerOne = p;
+                                break;
+                            case 1:
+                                playerTwo = p;
+                                break;
+                            default:
+                                System.out.println(preFix + "Object had invalid id! ");
+                                break;
+                        }
+                    }
 
 
                 } catch (IOException e) {

@@ -10,12 +10,11 @@ public class Player implements Serializable {
     public int y;
     public Color color;
     public int id;
-    public static int idCount;
 
-    public Player() {
+    public Player(int id) {
         this.x = 0;
         this.y = 0;
-        this.id = idCount++;
+        this.id = id;
         this.color = Color.WHITE;
     }
 
