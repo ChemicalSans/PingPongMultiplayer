@@ -20,7 +20,7 @@ public class Ball {
     public void move() {
         //Hier der code für Ball move
 
-
+        //
 
         //überprüft ob der ball mit einemobjekt kolidiert ist was vorher überprüft wurde
         if(col == true){
