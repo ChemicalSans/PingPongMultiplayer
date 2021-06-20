@@ -6,103 +6,45 @@ import com.sun.javafx.geom.Vec2d;
 
 import java.awt.*;
 import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
 
 public class PingPongClient extends TreeFrame {
 
     public static void main(String[] args) throws IOException {
-        new PingPongClient("26.103.63.212",11111);
+        new PingPongClient();
     }
 
-    public Player playerOne;
-    public Player playerTwo;
+    public Player playerOne = new Player();
+    public Player playerTwo = new Player();
 
-    public String hostname;
-    public int port;
-
+    public String hostname = "192.168.8.106";
+    public int port = 11111;
     public Socket socket;
 
-    public InputStream inputStream;
-    public OutputStream outputStream;
 
-    public DataInputStream dataInputStream;
-    public DataOutputStream dataOutputStream;
-
-    public ObjectInputStream objectInputStream;
-    public ObjectOutputStream objectOutputStream;
-
-
-    public PingPongClient(String hostname, int port) throws IOException {
-        this.hostname = hostname;
-        this.port = port;
-        this.playerOne = new Player();
-        this.playerTwo = new Player();
-
+    public PingPongClient() throws IOException {
         System.out.println("[INFO] PingPongClient: " + hostname + ":" + port);
-
-        this.socket = new Socket(hostname, port);
-        this.inputStream = socket.getInputStream();
-        this.outputStream = socket.getOutputStream();
-
-        this.dataInputStream = new DataInputStream(inputStream);
-        this.dataOutputStream = new DataOutputStream(outputStream);
-
-        this.objectOutputStream = new ObjectOutputStream(outputStream);
-        this.objectInputStream = new ObjectInputStream(inputStream);
+        socket = new Socket(this.hostname,this.port);
     }
-
-
 
     @Override
     public void paint(Graphics g) {
-        super.paint(g);
+        if(socket.isConnected()) {
+            System.out.println("Socket connected!");
+
+            try {
+                ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+                System.out.println(objectInputStream.read());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         g.setColor(Color.WHITE);
         g.drawLine(0,0,this.getWidth(),this.getHeight());
         g.drawRect(playerOne.x,playerTwo.y,20,20);
     }
 
-    @Override
-    public void run() {
-        graphicsBuffer = this.getGraphics();
-
-        while (true) {
-            try {
-                Thread.sleep(20);
-                this.paint(graphicsBuffer);
-                graphicsBuffer = this.getGraphics();
-
-
-
-                Object o = objectInputStream.readObject();
-                if(o.getClass().isInstance(new Player())) {
-                    Player p = (Player) o;
-                    System.out.println("[INFO] PingPongClient: Received Player!");
-
-                    switch (p.getId()) {
-                        case 0:
-                            playerOne = p;
-                            break;
-                        case 1:
-                            playerTwo = p;
-                            break;
-                        default:
-                            System.out.println("[ERROR] PingPongClient: Received player had invalid Id! --> " + p.id);
-                            break;
-                    }
-
-                }
-
-            } catch (StreamCorruptedException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
 }

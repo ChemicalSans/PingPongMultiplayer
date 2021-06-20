@@ -7,6 +7,7 @@ import com.sun.javafx.geom.Vec2d;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
@@ -27,18 +28,21 @@ public class PingPongServer implements Runnable {
     ServerSocket serverSocketTwo = new ServerSocket(portPlayerTwo);
     Socket socketTwo;
 
+
     public static void main(String[] args) throws IOException {
         new PingPongServer();
     }
 
     public PingPongServer () throws IOException {
+        System.out.println("[INFO] Server IP address: " + InetAddress.getLocalHost());
         System.out.println("[INFO] Server: Waiting for player one!");
         socketOne = serverSocketOne.accept();
         System.out.println("[INFO] Server: Player one connected!");
-        System.out.println("[INFO] Server: Waiting for player one!");
+        System.out.println("[INFO] Server: Waiting for player two!");
         socketTwo = serverSocketTwo.accept();
         System.out.println("[INFO] Server: Player two connected!");
 
+        new Thread(this).start();
         //GAME STARTUP CODE HERE >>
         playerOne.x = 100;
         playerOne.y = 200;
@@ -58,16 +62,26 @@ public class PingPongServer implements Runnable {
                 if(playerOne.x<100) movement*=-1;
                 playerOne.x += movement;
 
-                if(socketOne.isConnected() == true && playerOneConnected == false) {
-                    //Gets called ONCE if playerOne is connected >>
+                if(socketOne.isConnected()) {
+                    //Gets called if playerOne is connected >>
                     playerOneConnected = true;
                     System.out.println("[INFO] PingPongServer: Player one connected!");
+
+
+                    //Sending player Objects to playerOne
+                    sendPlayer(socketOne,playerOne);
+                    sendPlayer(socketOne,playerTwo);
                 }
 
-                if(socketTwo.isConnected() == true && playerTwoConnected == false) {
-                    //Gets called ONCE if playerOne is connected >>
+                if(socketTwo.isConnected()) {
+                    //Gets called if playerOne is connected >>
                     playerTwoConnected = true;
                     System.out.println("[INFO] PingPongServer: Player two connected!");
+
+
+                    //Sending player Objects to playerOne
+                    sendPlayer(socketTwo,playerOne);
+                    sendPlayer(socketTwo,playerTwo);
                 }
 
 
@@ -77,17 +91,10 @@ public class PingPongServer implements Runnable {
                     b.move();
                 }
 
-                //Sending player Objects to playerOne
-                sendPlayer(socketOne,playerOne);
-                sendPlayer(socketOne,playerTwo);
 
-                //Sending player Objects to playerOne
-                sendPlayer(socketTwo,playerOne);
-                sendPlayer(socketTwo,playerTwo);
 
             } catch (Exception e) {
-                System.out.println("[ERROR] PingPongServer: ");
-                e.printStackTrace();
+                System.out.println("[ERROR] PingPongServer: " + e.getMessage());
             }
         }
     }
