@@ -8,6 +8,7 @@ import java.awt.*;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.concurrent.TimeUnit;
 
 public class PingPongClient extends TreeFrame {
 
@@ -21,17 +22,17 @@ public class PingPongClient extends TreeFrame {
     public String hostname = "192.168.8.106";
     public int port = 11111;
     public Socket socket;
-
+    public String preFix = "[INFO] PingPongClient: ";
 
     public PingPongClient() throws IOException {
-        System.out.println("[INFO] PingPongClient: " + hostname + ":" + port);
+        System.out.println(preFix + "Connecting to " + hostname + ":" + port);
         socket = new Socket(this.hostname,this.port);
     }
 
     @Override
     public void paint(Graphics g) {
         if(socket.isConnected()) {
-            System.out.println("Socket connected!");
+            System.out.println(preFix + "Socket connected!");
 
             try {
                 ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());

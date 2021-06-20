@@ -13,20 +13,15 @@ import java.net.Socket;
 import java.util.Vector;
 
 public class PingPongServer implements Runnable {
-    int portPlayerOne = 11111;
-    int portPlayerTwo = 11112;
+    int port = 11111;
 
     Vector<Ball> balls = new Vector<Ball>();
     Player playerOne = new Player();
     Player playerTwo = new Player();
 
-    boolean playerOneConnected = false;
-    ServerSocket serverSocketOne = new ServerSocket(portPlayerOne);
-    Socket socketOne;
+    ServerSocket serverSocket = new ServerSocket(port);
+    Socket socket;
 
-    boolean playerTwoConnected = false;
-    ServerSocket serverSocketTwo = new ServerSocket(portPlayerTwo);
-    Socket socketTwo;
 
 
     public static void main(String[] args) throws IOException {
@@ -36,11 +31,9 @@ public class PingPongServer implements Runnable {
     public PingPongServer () throws IOException {
         System.out.println("[INFO] Server IP address: " + InetAddress.getLocalHost());
         System.out.println("[INFO] Server: Waiting for player one!");
-        socketOne = serverSocketOne.accept();
-        System.out.println("[INFO] Server: Player one connected!");
+        new Thread(new Client(serverSocket.accept())).start();
         System.out.println("[INFO] Server: Waiting for player two!");
-        socketTwo = serverSocketTwo.accept();
-        System.out.println("[INFO] Server: Player two connected!");
+        new Thread(new Client(serverSocket.accept())).start();
 
         new Thread(this).start();
         //GAME STARTUP CODE HERE >>
@@ -62,27 +55,8 @@ public class PingPongServer implements Runnable {
                 if(playerOne.x<100) movement*=-1;
                 playerOne.x += movement;
 
-                if(socketOne.isConnected()) {
-                    //Gets called if playerOne is connected >>
-                    playerOneConnected = true;
-                    System.out.println("[INFO] PingPongServer: Player one connected!");
 
 
-                    //Sending player Objects to playerOne
-                    sendPlayer(socketOne,playerOne);
-                    sendPlayer(socketOne,playerTwo);
-                }
-
-                if(socketTwo.isConnected()) {
-                    //Gets called if playerOne is connected >>
-                    playerTwoConnected = true;
-                    System.out.println("[INFO] PingPongServer: Player two connected!");
-
-
-                    //Sending player Objects to playerOne
-                    sendPlayer(socketTwo,playerOne);
-                    sendPlayer(socketTwo,playerTwo);
-                }
 
 
 
@@ -90,9 +64,6 @@ public class PingPongServer implements Runnable {
                 for(Ball b : balls) {
                     b.move();
                 }
-
-
-
             } catch (Exception e) {
                 System.out.println("[ERROR] PingPongServer: " + e.getMessage());
             }
