@@ -8,6 +8,7 @@ import java.awt.*;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
 public class PingPongClient extends TreeFrame {
@@ -21,31 +22,47 @@ public class PingPongClient extends TreeFrame {
 
     public String hostname = "192.168.8.106";
     public int port = 11111;
-    public Socket socket;
     public String preFix = "[INFO] PingPongClient: ";
 
-    public PingPongClient() throws IOException {
+
+    public PingPongClient() {
         System.out.println(preFix + "Connecting to " + hostname + ":" + port);
-        socket = new Socket(this.hostname,this.port);
+
+
     }
 
     @Override
     public void paint(Graphics g) {
-        if(socket.isConnected()) {
-            System.out.println(preFix + "Socket connected!");
-
-            try {
-                ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-                System.out.println(objectInputStream.read());
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
 
         g.setColor(Color.WHITE);
         g.drawLine(0,0,this.getWidth(),this.getHeight());
         g.drawRect(playerOne.x,playerTwo.y,20,20);
     }
 
+
+    @Override
+    public void run() {
+        try {
+            Socket socket = new Socket(hostname, port);
+            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+            DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+
+            while (true) {
+                try {
+
+                    //System.out.println(objectInputStream.read());
+                    System.out.println(dataInputStream.readUTF());
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }

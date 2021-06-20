@@ -31,9 +31,11 @@ public class PingPongServer implements Runnable {
     public PingPongServer () throws IOException {
         System.out.println("[INFO] Server IP address: " + InetAddress.getLocalHost());
         System.out.println("[INFO] Server: Waiting for player one!");
-        new Thread(new Client(serverSocket.accept())).start();
+        new Thread(new Client(serverSocket.accept(),this)).start();
+        System.out.println("[INFO] Server: Player one connected!");
         System.out.println("[INFO] Server: Waiting for player two!");
-        new Thread(new Client(serverSocket.accept())).start();
+        new Thread(new Client(serverSocket.accept(),this)).start();
+        System.out.println("[INFO] Server: Player two connected!");
 
         new Thread(this).start();
         //GAME STARTUP CODE HERE >>
@@ -46,15 +48,9 @@ public class PingPongServer implements Runnable {
 
     @Override
     public void run() {
-        int movement = 1;
         while (true) {
             try {
                 Thread.sleep(1);
-
-                if(playerOne.x>300) movement*=-1;
-                if(playerOne.x<100) movement*=-1;
-                playerOne.x += movement;
-
 
 
 
@@ -70,10 +66,5 @@ public class PingPongServer implements Runnable {
         }
     }
 
-    public void sendPlayer(Socket socket, Player p) throws IOException {
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-        objectOutputStream.writeObject(p);
-        objectOutputStream.close();
-    }
 
 }
