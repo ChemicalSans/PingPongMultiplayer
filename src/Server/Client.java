@@ -1,7 +1,5 @@
 package Server;
 
-import ClientAndServer.Player;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -25,7 +23,6 @@ public class Client implements Runnable {
     public void run() {
         while (true) {
             try {
-                //objectOutputStream.writeObject(pps.playerOne);
                 dataOutputStream.writeUTF("Hello World!");
 
             } catch (IOException e) {

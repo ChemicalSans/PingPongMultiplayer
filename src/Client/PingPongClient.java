@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class PingPongClient extends TreeFrame {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         new PingPongClient();
     }
 
@@ -49,28 +49,8 @@ public class PingPongClient extends TreeFrame {
 
             while (true) {
                 try {
-
-                    //System.out.println(objectInputStream.read());
                     System.out.println(dataInputStream.readUTF());
 
-                    /*
-                    Object o = objectInputStream.read();
-                    if(o.getClass().isInstance(new Player(0))) {
-                        Player p = (Player) o;
-                        switch (p.id) {
-                            case 0:
-                                playerOne = p;
-                                break;
-                            case 1:
-                                playerTwo = p;
-                                break;
-                            default:
-                                System.out.println(preFix + "Object had invalid id! ");
-                                break;
-                        }
-                    }
-
-                     */
 
 
                 } catch (IOException e) {
