@@ -14,7 +14,13 @@ import java.util.concurrent.TimeUnit;
 public class PingPongClient extends TreeFrame {
 
     public static void main(String[] args) {
-        new PingPongClient();
+        try {
+            new PingPongClient("192.168.8.106",11111);
+            TimeUnit.SECONDS.sleep(3);
+            new PingPongClient("192.168.8.106",11111);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public Player playerOne = new Player(0);
@@ -25,9 +31,10 @@ public class PingPongClient extends TreeFrame {
     public String preFix = "[INFO] PingPongClient: ";
 
 
-    public PingPongClient() {
+    public PingPongClient(String hostname,int port) {
         System.out.println(preFix + "Connecting to " + hostname + ":" + port);
-
+        this.hostname  = hostname;
+        this.port = port;
 
     }
 
@@ -36,7 +43,8 @@ public class PingPongClient extends TreeFrame {
 
         g.setColor(Color.WHITE);
         g.drawLine(0,0,this.getWidth(),this.getHeight());
-        g.drawRect(playerOne.x,playerTwo.y,20,20);
+        g.fillRect(playerOne.x,playerTwo.y,200,200);
+        System.out.println(preFix + "PlayerOne at " + playerOne.x + "x" + playerOne.y);
     }
 
 
@@ -46,13 +54,21 @@ public class PingPongClient extends TreeFrame {
             Socket socket = new Socket(hostname, port);
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
             DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+            long timeStart = System.currentTimeMillis();
 
             while (true) {
                 try {
+                    long timeNow = System.currentTimeMillis();
+                    long deltaTime = timeNow-timeStart;
+                    if(deltaTime > 20) {
+                        this.repaint();
+                        timeStart = timeNow;
+                    }
+
                     //System.out.println(dataInputStream.readUTF());
 
-                    Object o = objectInputStream.read();
-                    playerOne = (Player) o;
+                    playerOne = (Player) objectInputStream.readObject();
+
 
                 } catch (IOException e) {
                     e.printStackTrace();

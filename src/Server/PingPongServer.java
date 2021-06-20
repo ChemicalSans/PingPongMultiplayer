@@ -47,16 +47,19 @@ public class PingPongServer implements Runnable {
     public void run() {
         while (true) {
             try {
-                Thread.sleep(1);
+                Thread.sleep(20);
 
 
-
+                playerOne.x += 1;
+                playerOne.y += 1;
 
 
                 //Loopt über alle bälle und fürt bei jedem Ball move(); aus
                 for(Ball b : balls) {
                     b.move();
                 }
+
+
             } catch (Exception e) {
                 System.out.println("[ERROR] PingPongServer: " + e.getMessage());
             }
