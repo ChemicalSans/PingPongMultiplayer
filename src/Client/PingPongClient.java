@@ -6,6 +6,7 @@ import com.sun.javafx.geom.Vec2d;
 
 import java.awt.*;
 import java.io.*;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -15,9 +16,9 @@ public class PingPongClient extends TreeFrame {
 
     public static void main(String[] args) {
         try {
-            new PingPongClient("192.168.8.106",11111);
+            new PingPongClient("26.103.63.212",11111);
             TimeUnit.SECONDS.sleep(3);
-            new PingPongClient("192.168.8.106",11111);
+            new PingPongClient("26.103.63.212",11111);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -43,15 +44,28 @@ public class PingPongClient extends TreeFrame {
 
         g.setColor(Color.WHITE);
         g.drawLine(0,0,this.getWidth(),this.getHeight());
-        g.fillRect(playerOne.x,playerTwo.y,200,200);
-        System.out.println(preFix + "PlayerOne at " + playerOne.x + "x" + playerOne.y);
+        g.fillRect(playerOne.x,playerOne.y,200,200);
+        //System.out.println(preFix + "PlayerOne at " + playerOne.x + "x" + playerOne.y);
     }
 
 
     @Override
     public void run() {
         try {
-            Socket socket = new Socket(hostname, port);
+            Socket socket = null;
+
+            while (true) {
+                try {
+                    socket = new Socket(hostname, port);
+                    if(socket.isConnected()) break;
+                } catch (ConnectException e) {
+                    System.out.println(preFix + "Couldn't connect to the server! Reconnecting...");
+                }
+            }
+
+            System.out.println(preFix + "Connected!");
+
+
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
             DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
             long timeStart = System.currentTimeMillis();
@@ -67,16 +81,28 @@ public class PingPongClient extends TreeFrame {
 
                     //System.out.println(dataInputStream.readUTF());
 
-                    playerOne = (Player) objectInputStream.readObject();
-
+                    Player p = (Player) objectInputStream.readObject();
+                    if(p.id == playerOne.id) {
+                        //System.out.println(preFix + "PlayerOne overwritten!");
+                        playerOne = p;
+                    } else if(p.id == playerTwo.id) {
+                        //System.out.println(preFix + "PlayerTwo overwritten!");
+                        playerTwo = p;
+                    } else {
+                        System.out.println(preFix + "Object had an invalid id! " + p.id);
+                    }
 
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
 
             }
 
-        } catch (Exception e) {
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

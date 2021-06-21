@@ -15,31 +15,37 @@ import java.util.Vector;
 public class PingPongServer implements Runnable {
     int port = 11111;
 
-    Vector<Ball> balls = new Vector<Ball>();
+    Ball ball = new Ball(new Vec2d(2,2),new Vec2d(2,2),new Vector<>());
     Player playerOne = new Player(0);
     Player playerTwo = new Player(1);
 
     ServerSocket serverSocket = new ServerSocket(port);
+    Client cOne = null;
+    Client cTwo = null;
 
     public static void main(String[] args) throws IOException {
         new PingPongServer();
     }
 
     public PingPongServer () throws IOException {
-        System.out.println("[INFO] Server IP address: " + InetAddress.getLocalHost().getHostAddress() + ":" + port);
-        System.out.println("[INFO] Server: Waiting for player one!");
-        new Thread(new Client(serverSocket.accept(),this)).start();
-        System.out.println("[INFO] Server: Player one connected!");
-        System.out.println("[INFO] Server: Waiting for player two!");
-        new Thread(new Client(serverSocket.accept(),this)).start();
-        System.out.println("[INFO] Server: Player two connected!");
-
-        new Thread(this).start();
         //GAME STARTUP CODE HERE >>
         playerOne.x = 100;
         playerOne.y = 200;
 
 
+
+        //Client connection stuff >>>
+        System.out.println("[INFO] Server IP address: " + InetAddress.getLocalHost().getHostAddress() + ":" + port);
+        System.out.println("[INFO] Server: Waiting for player one!");
+        cOne = new Client(serverSocket.accept(),this);
+        new Thread(cOne).start();
+        System.out.println("[INFO] Server: Player one connected!");
+        System.out.println("[INFO] Server: Waiting for player two!");
+        cTwo = new Client(serverSocket.accept(),this);
+        new Thread(cTwo).start();
+        System.out.println("[INFO] Server: Player two connected!");
+
+        new Thread(this).start();
     }
 
 
@@ -49,15 +55,11 @@ public class PingPongServer implements Runnable {
             try {
                 Thread.sleep(20);
 
+                cOne.pps = this;
+                cTwo.pps = this;
 
                 playerOne.x += 1;
                 playerOne.y += 1;
-
-
-                //Loopt über alle bälle und fürt bei jedem Ball move(); aus
-                for(Ball b : balls) {
-                    b.move();
-                }
 
 
             } catch (Exception e) {
