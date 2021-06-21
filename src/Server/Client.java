@@ -25,9 +25,13 @@ public class Client implements Runnable {
             try {
                 //dataOutputStream.writeUTF("Hello World!");
                 System.out.println("Client: " + pps.playerOne.x + "x" + pps.playerOne.y);
-                objectOutputStream.writeObject(pps.playerOne);
-                objectOutputStream.writeObject(pps.playerTwo);
-                objectOutputStream.flush();
+                //objectOutputStream.writeObject(pps.playerOne);
+                //objectOutputStream.writeObject(pps.playerTwo);
+                //objectOutputStream.flush();
+
+                dataOutputStream.writeInt(pps.playerOne.x);
+                dataOutputStream.writeInt(pps.playerOne.y);
+                dataOutputStream.flush();
 
             } catch (IOException e) {
                 e.printStackTrace();

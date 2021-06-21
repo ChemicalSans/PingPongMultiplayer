@@ -40,10 +40,10 @@ public class PingPongServer implements Runnable {
         cOne = new Client(serverSocket.accept(),this);
         new Thread(cOne).start();
         System.out.println("[INFO] Server: Player one connected!");
-        System.out.println("[INFO] Server: Waiting for player two!");
-        cTwo = new Client(serverSocket.accept(),this);
-        new Thread(cTwo).start();
-        System.out.println("[INFO] Server: Player two connected!");
+        //System.out.println("[INFO] Server: Waiting for player two!");
+        //cTwo = new Client(serverSocket.accept(),this);
+        //new Thread(cTwo).start();
+        //System.out.println("[INFO] Server: Player two connected!");
 
         new Thread(this).start();
     }
@@ -56,7 +56,7 @@ public class PingPongServer implements Runnable {
                 Thread.sleep(20);
 
                 cOne.pps = this;
-                cTwo.pps = this;
+                //cTwo.pps = this;
 
                 playerOne.x += 1;
                 playerOne.y += 1;

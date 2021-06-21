@@ -15,13 +15,9 @@ import java.util.concurrent.TimeUnit;
 public class PingPongClient extends TreeFrame {
 
     public static void main(String[] args) {
-        try {
-            new PingPongClient("26.103.63.212",11111);
-            TimeUnit.SECONDS.sleep(3);
-            new PingPongClient("26.103.63.212",11111);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        new PingPongClient("26.103.63.212",11111);
+        //TimeUnit.SECONDS.sleep(3);
+        //new PingPongClient("26.103.63.212",11111);
     }
 
     public Player playerOne = new Player(0);
@@ -45,7 +41,6 @@ public class PingPongClient extends TreeFrame {
         g.setColor(Color.WHITE);
         g.drawLine(0,0,this.getWidth(),this.getHeight());
         g.fillRect(playerOne.x,playerOne.y,200,200);
-        //System.out.println(preFix + "PlayerOne at " + playerOne.x + "x" + playerOne.y);
     }
 
 
@@ -80,21 +75,34 @@ public class PingPongClient extends TreeFrame {
                     }
 
                     //System.out.println(dataInputStream.readUTF());
+                    /*
+                    System.out.println(preFix + "objects available = " + objectInputStream.available());
+                    while(objectInputStream.available()>0) {
+                        Object o = objectInputStream.readObject();
+                        if(o.getClass().isInstance(playerOne)) {
+                            playerOne = (Player) o;
+                            System.out.println(preFix+"PlayerOne overwritten!");
+                        }
+                    }
+                     */
 
-                    Player p = (Player) objectInputStream.readObject();
-                    if(p.id == playerOne.id) {
-                        //System.out.println(preFix + "PlayerOne overwritten!");
-                        playerOne = p;
-                    } else if(p.id == playerTwo.id) {
-                        //System.out.println(preFix + "PlayerTwo overwritten!");
-                        playerTwo = p;
-                    } else {
-                        System.out.println(preFix + "Object had an invalid id! " + p.id);
+                    System.out.println(preFix+"DataAvailable " + dataInputStream.available());
+
+                    for(int i = 0; i < dataInputStream.available(); i++) {
+                        switch (i) {
+                            case 0:
+                                playerOne.x = dataInputStream.readInt();
+                                break;
+                            case 1:
+                                playerOne.x = dataInputStream.readInt();
+                                break;
+                            default:
+                                System.out.println(preFix+"InvalidId " + i);
+                                break;
+                        }
                     }
 
                 } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
 
