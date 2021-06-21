@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class PingPongClient extends TreeFrame {
 
     public static void main(String[] args) {
-        new PingPongClient("26.103.63.212",11111);
+        new PingPongClient("192.168.8.106",11111);
         //TimeUnit.SECONDS.sleep(3);
         //new PingPongClient("26.103.63.212",11111);
     }
@@ -74,7 +74,37 @@ public class PingPongClient extends TreeFrame {
                         timeStart = timeNow;
                     }
 
-                    //System.out.println(dataInputStream.readUTF());
+
+                    while (dataInputStream.available()>0) {
+                        String data = dataInputStream.readUTF();
+                        String index = data.substring(data.indexOf(":")+1);
+                        String valueTemp = data.substring(0,data.indexOf(":"));
+                        int value = Integer.valueOf(valueTemp);
+
+                        //System.out.println("Data: " + data);
+                        //System.out.println("Index: " + index + "   Value: " + value);
+
+                        switch (index) {
+                            case "p1x":
+                                playerOne.x = value;
+                                break;
+                            case "p1y":
+                                playerOne.y = value;
+                                break;
+                            case "p2x":
+                                playerTwo.x = value;
+                                break;
+                            case "p2y":
+                                playerTwo.y = value;
+                                break;
+                            default:
+                                System.out.println(preFix+"Unknowen data index! " + index);
+                                break;
+                        }
+
+                    }
+
+
                     /*
                     System.out.println(preFix + "objects available = " + objectInputStream.available());
                     while(objectInputStream.available()>0) {
@@ -83,24 +113,33 @@ public class PingPongClient extends TreeFrame {
                             playerOne = (Player) o;
                             System.out.println(preFix+"PlayerOne overwritten!");
                         }
+                        objectInputStream.reset();
                     }
+
                      */
 
+
+                    /*
                     System.out.println(preFix+"DataAvailable " + dataInputStream.available());
 
-                    for(int i = 0; i < dataInputStream.available(); i++) {
+                    for(int i = 0; i < 2; i++) {
                         switch (i) {
                             case 0:
                                 playerOne.x = dataInputStream.readInt();
                                 break;
                             case 1:
-                                playerOne.x = dataInputStream.readInt();
+                                playerOne.y = dataInputStream.readInt();
                                 break;
                             default:
                                 System.out.println(preFix+"InvalidId " + i);
+                                dataInputStream.skipBytes(dataInputStream.available()-2);
                                 break;
                         }
                     }
+
+                    dataInputStream.reset();
+
+                     */
 
                 } catch (IOException e) {
                     e.printStackTrace();

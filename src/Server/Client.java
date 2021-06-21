@@ -4,6 +4,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class Client implements Runnable {
     Socket socket;
@@ -23,16 +24,14 @@ public class Client implements Runnable {
     public void run() {
         while (true) {
             try {
-                //dataOutputStream.writeUTF("Hello World!");
-                System.out.println("Client: " + pps.playerOne.x + "x" + pps.playerOne.y);
-                //objectOutputStream.writeObject(pps.playerOne);
-                //objectOutputStream.writeObject(pps.playerTwo);
-                //objectOutputStream.flush();
+                dataOutputStream.writeUTF(pps.playerOne.x+":p1x");
+                dataOutputStream.writeUTF(pps.playerOne.y+":p1y");
+                dataOutputStream.writeUTF(pps.playerTwo.x+":p2x");
+                dataOutputStream.writeUTF(pps.playerTwo.y+":p2y");
 
-                dataOutputStream.writeInt(pps.playerOne.x);
-                dataOutputStream.writeInt(pps.playerOne.y);
-                dataOutputStream.flush();
 
+            } catch (SocketException e) {
+                System.exit(444);
             } catch (IOException e) {
                 e.printStackTrace();
             }
