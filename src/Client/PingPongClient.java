@@ -2,20 +2,19 @@ package Client;
 
 import ClientAndServer.Player;
 import TreePackage.TreeFrame;
-import com.sun.javafx.geom.Vec2d;
 
 import java.awt.*;
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.ConnectException;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.concurrent.TimeUnit;
 
 public class PingPongClient extends TreeFrame {
 
     public static void main(String[] args) {
-        new PingPongClient("192.168.8.106",11111);
+        new PingPongClient("26.103.63.212",11111);
         //TimeUnit.SECONDS.sleep(3);
         //new PingPongClient("26.103.63.212",11111);
     }
@@ -23,8 +22,8 @@ public class PingPongClient extends TreeFrame {
     public Player playerOne = new Player(0);
     public Player playerTwo = new Player(1);
 
-    public String hostname = "192.168.8.106";
-    public int port = 11111;
+    public String hostname;
+    public int port;
     public String preFix = "[INFO] PingPongClient: ";
 
 
@@ -47,7 +46,7 @@ public class PingPongClient extends TreeFrame {
     @Override
     public void run() {
         try {
-            Socket socket = null;
+            Socket socket;
 
             while (true) {
                 try {
@@ -79,7 +78,7 @@ public class PingPongClient extends TreeFrame {
                         String data = dataInputStream.readUTF();
                         String index = data.substring(data.indexOf(":")+1);
                         String valueTemp = data.substring(0,data.indexOf(":"));
-                        int value = Integer.valueOf(valueTemp);
+                        int value = Integer.parseInt(valueTemp);
 
                         //System.out.println("Data: " + data);
                         //System.out.println("Index: " + index + "   Value: " + value);
@@ -147,8 +146,6 @@ public class PingPongClient extends TreeFrame {
 
             }
 
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
