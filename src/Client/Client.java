@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Client {
     public static void main(String[] args) {
-        new Client("localhost",6969);
+        new Client("localhost",6969,0);
     }
 
     Socket socket = new Socket();
@@ -19,7 +19,7 @@ public class Client {
     ObjectInputStream objectInputStream;
     ObjectOutputStream objectOutputStream;
 
-    public Client(String host,int port) {
+    public Client(String host,int port, int playerID) {
         try {
             while (!socket.isBound()) {
                 try {
@@ -34,23 +34,25 @@ public class Client {
 
             System.out.println("Connecting Streams... ");
             try {
-                this.bufferedInputStream = new BufferedInputStream(socket.getInputStream());
                 this.bufferedOutputStream = new BufferedOutputStream(socket.getOutputStream());
-
-                //this.dataInputStream = new DataInputStream(bufferedInputStream);
                 this.dataOutputStream = new DataOutputStream(bufferedOutputStream);
+                this.objectOutputStream = new ObjectOutputStream(bufferedOutputStream);
+
+                this.bufferedInputStream = new BufferedInputStream(socket.getInputStream());
+                this.dataInputStream = new DataInputStream(bufferedInputStream);
                 this.objectInputStream = new ObjectInputStream(bufferedInputStream);
-                //this.objectOutputStream = new ObjectOutputStream(bufferedOutputStream);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             System.out.println("Streams connected!");
 
 
+            String data = "";
             while (true) {
                 try {
-                    System.out.println("Sending: " + "player:0");
-                    dataOutputStream.writeUTF("player:0");
+                    data = "player:" + playerID;
+                    System.out.println("Sending: " + data);
+                    dataOutputStream.writeUTF(data);
                     dataOutputStream.flush();
 
                     Player player = (Player) objectInputStream.readObject();

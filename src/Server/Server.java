@@ -1,5 +1,7 @@
 package Server;
 
+import Game.Game;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -20,8 +22,12 @@ public class Server {
     }
 
     ServerSocket serverSocket;
+    Game game;
+
     public Server(int port) {
         try {
+            game = new Game();
+
             System.out.println(ANSI_GREEN + "Starting server...");
             this.serverSocket = new ServerSocket(port);
             System.out.println(ANSI_GREEN + "Server started!");

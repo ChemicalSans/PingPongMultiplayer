@@ -18,10 +18,12 @@ public class ClientHandler implements Runnable {
     public ClientHandler(Socket socket) {
         try {
             this.socket = socket;
-            this.dataInputStream = new DataInputStream(socket.getInputStream());
             this.dataOutputStream = new DataOutputStream(socket.getOutputStream());
-            this.objectInputStream = new ObjectInputStream(socket.getInputStream());
             this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+
+            this.dataInputStream = new DataInputStream(socket.getInputStream());
+            this.objectInputStream = new ObjectInputStream(socket.getInputStream());
+
             this.thread.start();
         } catch (IOException e) {
             e.printStackTrace();
