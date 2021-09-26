@@ -36,7 +36,7 @@ public class Server {
                 System.out.println(ANSI_YELLOW + "Waiting for connection!");
                 Socket socket = serverSocket.accept();
                 System.out.println(ANSI_GREEN + "Client connected!");
-                new ClientHandler(socket);
+                new ClientHandler(socket,this);
             }
         } catch (IOException e) {
             e.printStackTrace();

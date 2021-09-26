@@ -8,16 +8,16 @@ import java.net.Socket;
 public class ClientHandler implements Runnable {
     Thread thread = new Thread(this);
     Socket socket;
+    Server server;
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
     ObjectInputStream objectInputStream;
     ObjectOutputStream objectOutputStream;
 
-    Player testPlayer = new Player(400,500);
-
-    public ClientHandler(Socket socket) {
+    public ClientHandler(Socket socket, Server server) {
         try {
             this.socket = socket;
+            this.server = server;
             this.dataOutputStream = new DataOutputStream(socket.getOutputStream());
             this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
 
@@ -37,8 +37,19 @@ public class ClientHandler implements Runnable {
                 String data = dataInputStream.readUTF();
 
                 if(data.contains("player:")) {
-                    objectOutputStream.writeObject(testPlayer);
-                    objectOutputStream.flush();
+                    String subData = data.substring(data.indexOf(":")+1);
+
+                    if(subData.equals("?")) {
+                        dataOutputStream.writeInt(server.game.players.size());
+                        dataOutputStream.flush();
+
+                    } else {
+                        int d = Integer.valueOf(subData);
+
+
+                        objectOutputStream.writeObject(server.game.getPlayer(d));
+                        objectOutputStream.flush();
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();

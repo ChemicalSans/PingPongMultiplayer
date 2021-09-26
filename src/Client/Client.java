@@ -4,11 +4,12 @@ import Game.Player;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 public class Client {
     public static void main(String[] args) {
-        new Client("localhost",6969,0);
+        new Client("localhost",6969);
     }
 
     Socket socket = new Socket();
@@ -19,7 +20,9 @@ public class Client {
     ObjectInputStream objectInputStream;
     ObjectOutputStream objectOutputStream;
 
-    public Client(String host,int port, int playerID) {
+    Vector<Player> players = new Vector<>();
+
+    public Client(String host,int port) {
         try {
             while (!socket.isBound()) {
                 try {
@@ -47,19 +50,31 @@ public class Client {
             System.out.println("Streams connected!");
 
 
-            String data = "";
             while (true) {
                 try {
-                    data = "player:" + playerID;
-                    System.out.println("Sending: " + data);
-                    dataOutputStream.writeUTF(data);
+
+                    //Get Players
+                    dataOutputStream.writeUTF("player:?");
                     dataOutputStream.flush();
 
-                    Player player = (Player) objectInputStream.readObject();
-                    System.out.println("Receiving: " + player);
+                    int playerCount = dataInputStream.readInt();
+                    System.out.println("PlayerCount: " + playerCount);
+
+                    /*
+                    for(int i = 0; i < playerCount; i++) {
+                        dataOutputStream.writeUTF("player:" + i);
+                        dataOutputStream.flush();
+
+                        Player player = (Player) objectInputStream.readObject();
+                        players.add(player);
+                    }
+                    */
+
+
+
+
+
                 } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             }

@@ -5,20 +5,21 @@ import java.io.Serializable;
 import java.util.Vector;
 
 public class Player implements Serializable {
-    public static Vector<Player> players = new Vector<Player>();
     public static int idCounter = 0;
     public int id;
     public Point pos;
+    public Game game;
 
-    public Player(int x, int y) {
+    public Player(Game game, int x, int y) {
         this.pos = new Point(x,y);
         this.id = idCounter++;
+        this.game = game;
 
-        players.add(this);
+        game.players.add(this);
     }
 
     public void delete() {
-        players.remove(this);
+        game.players.remove(this);
     }
 
     @Override
@@ -28,11 +29,5 @@ public class Player implements Serializable {
 
 
 
-    public static Player getPlayer(int id) {
-        for(Player player : players) {
-            if(id == player.id) return player;
-        }
 
-        return null;
-    }
 }
