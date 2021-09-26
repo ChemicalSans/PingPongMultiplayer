@@ -60,7 +60,7 @@ public class Client {
                     int playerCount = dataInputStream.readInt();
                     System.out.println("PlayerCount: " + playerCount);
 
-                    /*
+
                     for(int i = 0; i < playerCount; i++) {
                         dataOutputStream.writeUTF("player:" + i);
                         dataOutputStream.flush();
@@ -68,8 +68,6 @@ public class Client {
                         Player player = (Player) objectInputStream.readObject();
                         players.add(player);
                     }
-                    */
-
 
 
 

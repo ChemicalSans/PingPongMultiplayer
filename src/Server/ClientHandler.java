@@ -47,7 +47,7 @@ public class ClientHandler implements Runnable {
                         int d = Integer.valueOf(subData);
 
 
-                        objectOutputStream.writeObject(server.game.getPlayer(d));
+                        objectOutputStream.writeObject(server.game.getPlayer(d).);
                         objectOutputStream.flush();
                     }
                 }

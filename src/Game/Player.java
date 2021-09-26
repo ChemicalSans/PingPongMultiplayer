@@ -2,7 +2,6 @@ package Game;
 
 import java.awt.*;
 import java.io.Serializable;
-import java.util.Vector;
 
 public class Player implements Serializable {
     public static int idCounter = 0;
